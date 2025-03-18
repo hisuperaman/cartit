@@ -18,6 +18,10 @@ import androidx.compose.material3.Button
 fun ShirtSelector(shirtImages: List<Int>, currentShirtIndex: Int, onShirtSelected: (Int) -> Unit) {
     val pagerState = rememberPagerState(initialPage = currentShirtIndex, pageCount = { shirtImages.size }) // Start at the first shirt
 
+    LaunchedEffect(currentShirtIndex) {
+        pagerState.animateScrollToPage(currentShirtIndex)
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Bottom
