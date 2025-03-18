@@ -1,5 +1,7 @@
 package com.hisuperaman.cartit
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.border
@@ -84,96 +86,110 @@ fun UserScreen(authViewModel: AuthViewModel, onLogoutClick: () -> Unit, modifier
 
         var errorMessage: String? by remember { mutableStateOf(null) }
 
-        Surface(
+        Box(
             modifier = modifier
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.End
-            ) {
-                StyledIconButton(
-                    onClick = {
-                        authViewModel.logout {
-                            Toast.makeText(context, "Logout successful!", Toast.LENGTH_SHORT).show()
-                            onLogoutClick()
-                        }
-                    },
-                    painter = painterResource(id = R.drawable.ic_logout),
-                    tint = MaterialTheme.colorScheme.error
-                )
-            }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.padding_small))
-                    .fillMaxSize()
-            ) {
-                Text(
-                    text = "User Information",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .padding(vertical = 24.dp)
-                )
-
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    OutlinedTextField(
-                        value = user?.email?:"",
-                        label = { Text(text = "Email") },
-                        onValueChange = {},
-                        readOnly = true
-                    )
-                    OutlinedTextField(
-                        value = name,
-                        label = { Text(text = "Name") },
-                        onValueChange = {name = it},
-                    )
-                    OutlinedTextField(
-                        value = address,
-                        label = { Text(text = "Address") },
-                        onValueChange = {address = it},
-                        maxLines = 5
-                    )
-                }
-
-                errorMessage?.let {
-                    Text(text = it, color = MaterialTheme.colorScheme.error, fontSize = 14.sp)
-                }
-
+            Column {
                 Row(
-                    horizontalArrangement = Arrangement.End,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 48.dp, vertical = 12.dp)
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    OutlinedButton(
-                        onClick = {
-                            if (name.isBlank() || address.isBlank()) {
-                                errorMessage = "Any field must not be empty"
-                            }
-                            else {
-                                authViewModel.updateUserInfo(name = name, address = address, email = user?.email?:"", password = null) {
-                                    Toast.makeText(context, "User info update successful!", Toast.LENGTH_SHORT).show()
-                                    errorMessage = null
-                                }
-                            }
-                        },
-                        modifier = Modifier
-                    ) {
+                    Row {
                         Text(
-                            text = "Save",
+                            text = "Developed with ❤\uFE0F by "
+                        )
+                        Text(
+                            text = "hisuperaman",
+                            modifier = Modifier.clickable() {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/hisuperaman"))
+                                context.startActivity(intent)
+                            }
                         )
                     }
+
+                    StyledIconButton(
+                        onClick = {
+                            authViewModel.logout {
+                                Toast.makeText(context, "Logout successful!", Toast.LENGTH_SHORT).show()
+                                onLogoutClick()
+                            }
+                        },
+                        painter = painterResource(id = R.drawable.ic_logout),
+                        tint = MaterialTheme.colorScheme.error
+                    )
                 }
 
-            }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .padding(dimensionResource(id = R.dimen.padding_small))
+                        .fillMaxSize()
+                ) {
+                    Text(
+                        text = "User Information",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .align(Alignment.Start)
+                            .padding(vertical = 24.dp)
+                    )
 
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = user?.email?:"",
+                            label = { Text(text = "Email") },
+                            onValueChange = {},
+                            readOnly = true
+                        )
+                        OutlinedTextField(
+                            value = name,
+                            label = { Text(text = "Name") },
+                            onValueChange = {name = it},
+                        )
+                        OutlinedTextField(
+                            value = address,
+                            label = { Text(text = "Address") },
+                            onValueChange = {address = it},
+                            maxLines = 5
+                        )
+                    }
+
+                    errorMessage?.let {
+                        Text(text = it, color = MaterialTheme.colorScheme.error, fontSize = 14.sp)
+                    }
+
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 48.dp, vertical = 12.dp)
+                    ) {
+                        OutlinedButton(
+                            onClick = {
+                                if (name.isBlank() || address.isBlank()) {
+                                    errorMessage = "Any field must not be empty"
+                                }
+                                else {
+                                    authViewModel.updateUserInfo(name = name, address = address, email = user?.email?:"", password = null) {
+                                        Toast.makeText(context, "User info update successful!", Toast.LENGTH_SHORT).show()
+                                        errorMessage = null
+                                    }
+                                }
+                            },
+                            modifier = Modifier
+                        ) {
+                            Text(
+                                text = "Save",
+                            )
+                        }
+                    }
+
+                }
+            }
         }
 }
 
